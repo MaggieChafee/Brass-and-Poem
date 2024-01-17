@@ -77,8 +77,8 @@ while (choice != "5")
             break;
         case "3":
             Console.Clear();
-            Console.WriteLine("Add a product");
-            // Add a product
+            Console.WriteLine(" ********** ADD A PRODUCT ********** ");
+            AddProduct(products, productTypes);
             DisplayMenu();
             break;
         case "4":
@@ -168,7 +168,54 @@ void DeleteProduct(List<Product> products, List<ProductType> productTypes)
 
 void AddProduct(List<Product> products, List<ProductType> productTypes)
 {
-    throw new NotImplementedException();
+    Console.WriteLine("What is the name of the product you would like to add?");
+    string createName = Console.ReadLine().Trim();
+
+    Console.WriteLine("What is the price of this product?");
+    decimal createPrice = 0.00M;
+    while (createPrice == 0.00M)
+    {
+        try
+        {
+            createPrice = Convert.ToDecimal(Console.ReadLine());
+        }
+        catch (FormatException)
+        {
+            Console.WriteLine("Only type integers.");
+        }
+    }
+    
+
+    Console.WriteLine("Which product type would you like to assign to this product? Enter the Id number.");
+    foreach (ProductType productType in productTypes)
+    {
+        Console.WriteLine($"{productType.Id} - {productType.Title}");
+    }
+
+    int createPTId = 0;
+    while (createPTId == 0)
+    {
+        try
+        {
+            createPTId = Convert.ToInt32(Console.ReadLine());
+        }
+        catch (FormatException)
+        {
+            Console.WriteLine("Only type integers.");
+        }
+
+    }
+
+    Product createProduct = new Product
+    {
+        Name = createName,
+        Price = createPrice,
+        ProductTypeId = createPTId
+    };
+
+    products.Add(createProduct);
+    Console.WriteLine("Your product has been added!");
+
 }
 
 void UpdateProduct(List<Product> products, List<ProductType> productTypes)
