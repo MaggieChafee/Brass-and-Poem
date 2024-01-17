@@ -65,14 +65,14 @@ while (choice != "5")
     {
         case "1":
             Console.Clear();
-            Console.WriteLine("Display all Products");
+            Console.WriteLine(" ********** ALL PRODUCTS **********");
             DisplayAllProducts(products, productTypes);
             DisplayMenu();
             break;
         case "2":
             Console.Clear();
-            Console.WriteLine("Delete a Product");
-            // Delete a Product
+            Console.WriteLine(" ********** DELETE A PRODUCT **********");
+            DeleteProduct(products, productTypes);
             DisplayMenu();
             break;
         case "3":
@@ -122,7 +122,48 @@ void DisplayAllProducts(List<Product> products, List<ProductType> productTypes)
 
 void DeleteProduct(List<Product> products, List<ProductType> productTypes)
 {
-    throw new NotImplementedException();
+    DisplayAllProducts(products, productTypes);
+    Console.WriteLine("Which product would you like to delete?");
+    int delChoice = 0;
+    while (delChoice == 0)
+    {
+        try
+        {
+            int response = Convert.ToInt32(Console.ReadLine());
+            delChoice = response;
+        }
+        catch (FormatException)
+        {
+            Console.WriteLine("Please type only integars.");
+        }
+        catch (ArgumentOutOfRangeException)
+        {
+            Console.WriteLine("Please only select an available product.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex);
+            Console.WriteLine("Follow the prompt.");
+        }
+    }
+    Console.WriteLine($@"Are you sure you want to delete {products[delChoice - 1].Name}
+    1. Yes
+    2. No");
+    string finalAnswer = Console.ReadLine().Trim();
+    switch (finalAnswer)
+    {
+        case "1":
+            products.Remove(products[delChoice - 1]);
+            Console.WriteLine("Product has been deleted.");
+            break;
+        case "2":
+            Console.WriteLine("Nevermind.");
+            break;
+        default:
+            Console.WriteLine("Invalid Entry");
+            break;
+    }
+   
 }
 
 void AddProduct(List<Product> products, List<ProductType> productTypes)
