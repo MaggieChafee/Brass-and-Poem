@@ -1,5 +1,7 @@
 ﻿
 //create a "products" variable here to include at least five Product instances. Give them appropriate ProductTypeIds.
+using System.ComponentModel.Design;
+
 List<Product> products = new List<Product>()
 {
     new Product()
@@ -83,8 +85,8 @@ while (choice != "5")
             break;
         case "4":
             Console.Clear();
-            Console.WriteLine("Update a Product");
-            // Update a product
+            Console.WriteLine(" ********** UPDATE A PRODUCT ********** ");
+            UpdateProduct(products, productTypes);
             DisplayMenu();
             break;
         case "5":
@@ -115,7 +117,7 @@ void DisplayAllProducts(List<Product> products, List<ProductType> productTypes)
     for (int i = 0 ; i < products.Count; i++)
     {
         Console.WriteLine(@$"{i + 1}. {products[i].Name}
-    Price: {products[i].Price}
+    Price: ${products[i].Price}
     Product Type: {productTypes.Where(p => p.Id == products[i].ProductTypeId).First().Title}");
     };
 }
@@ -124,13 +126,13 @@ void DeleteProduct(List<Product> products, List<ProductType> productTypes)
 {
     DisplayAllProducts(products, productTypes);
     Console.WriteLine("Which product would you like to delete?");
-    int delChoice = 0;
-    while (delChoice == 0)
+    Product delChoice = null;
+    while (delChoice == null)
     {
         try
         {
             int response = Convert.ToInt32(Console.ReadLine());
-            delChoice = response;
+            delChoice = products[response - 1];
         }
         catch (FormatException)
         {
@@ -146,14 +148,14 @@ void DeleteProduct(List<Product> products, List<ProductType> productTypes)
             Console.WriteLine("Follow the prompt.");
         }
     }
-    Console.WriteLine($@"Are you sure you want to delete {products[delChoice - 1].Name}
+    Console.WriteLine($@"Are you sure you want to delete {delChoice.Name}
     1. Yes
     2. No");
     string finalAnswer = Console.ReadLine().Trim();
     switch (finalAnswer)
     {
         case "1":
-            products.Remove(products[delChoice - 1]);
+            products.Remove(delChoice);
             Console.WriteLine("Product has been deleted.");
             break;
         case "2":
@@ -220,8 +222,68 @@ void AddProduct(List<Product> products, List<ProductType> productTypes)
 
 void UpdateProduct(List<Product> products, List<ProductType> productTypes)
 {
-    throw new NotImplementedException();
+    DisplayAllProducts(products, productTypes);
+    Console.WriteLine("Which product would you like to update?");
+    Product choice = null;
+    while (choice == null)
+    {
+        try
+        {
+            int response = Convert.ToInt32(Console.ReadLine());
+            choice = products[response - 1];
+        }
+        catch (FormatException)
+        {
+            Console.WriteLine("Please only type integars.");
+        }
+        catch (ArgumentOutOfRangeException)
+        {
+            Console.WriteLine("Please only choose a number associated with an existing item.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex);
+            Console.WriteLine("Invalid entry. Try again.");
+        }
+    }
+    Console.WriteLine($@"Which would you like to edit?
+    1. Name: {choice.Name}
+    2. Price: {choice.Price}
+    3. Product Type Id: {choice.ProductTypeId} - {productTypes.Where(p => p.Id == choice.ProductTypeId).First().Title}");
+
+    string answer = Console.ReadLine().Trim();
+
+    switch (answer)
+    {
+        case "1":
+            Console.WriteLine("What is the updated name of this product?");
+            string updateName = Console.ReadLine().Trim();
+            choice.Name = updateName;
+            Console.WriteLine("Your product name has been updated!");
+            break;
+        case "2":
+            Console.WriteLine("What is the new price of the product?");
+            decimal updatePrice = Convert.ToDecimal(Console.ReadLine());
+            choice.Price = updatePrice;
+            Console.WriteLine("Your product price has been updated!");
+            break;
+        case "3":
+            Console.WriteLine("Please choose the updated Product Type Id:");
+            for (int i = 0; i < productTypes.Count; i++)
+            {
+                Console.WriteLine(@$"   {i + 1}. {productTypes[i].Title}");
+            }
+            int updateId = Convert.ToInt32(Console.ReadLine());
+            choice.ProductTypeId = updateId;
+            Console.WriteLine("Your product type Id has been updated!");
+            break;
+        default:
+            Console.WriteLine("Invalid Entry.");
+            break;
+    }
+
 }
+
 
 // don't move or change this!
 public partial class Program { }
